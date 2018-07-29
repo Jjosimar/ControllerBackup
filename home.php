@@ -69,11 +69,11 @@
                             <i class="fa fa-database"></i> <span>Backup Dados</span> <i class="fa fa-angle-left pull-right"></i>
                             </a>                    
                         </li>                            
-                        <li class="treeview">
+                        <!--li class="treeview">
                             <a href="#agenda" id="agenda">
                                 <i class="fa fa-book"></i> <span>Agenda</span> <i class="fa fa-angle-left pull-right"></i>
                             </a>
-                        </li>
+                        </li-->
                                                 
                         <li class="treeview">
                             <a href="#">
@@ -108,7 +108,7 @@
                                         Cadastro de Funcionários
                                     </a>
                                 </li>
-                                <li>
+                                <!--li>
                                     <a href="#areaadd.php" id="areaadd">
                                         <i class="fa fa-briefcase"></i>
                                         Cadastro de Setor
@@ -125,15 +125,15 @@
                                         <i class="fa fa-desktop"></i>
                                         Cadastro de Unidade
                                     </a>
-                                </li>                                
+                                </li-->                                
                             </ul>
                         </li>
-                        <li class="treeview">
+                        <!--li class="treeview">
                             <a href="#">
                                 <i class="fa fa-money"></i> <span>Financeiro</span><i class="fa fa-angle-left pull-right"></i>
                             </a>
-                        </li>
-                        <li class="treeview">
+                        </li-->
+                        <!--li class="treeview">
                             <a href="#">
                                 <i class="fa fa-navicon"></i> <span>Ocorrências</span> <i class="fa fa-angle-left pull-right"></i>
                             </a>
@@ -141,7 +141,7 @@
                                 <li><a href="#listtask" id="listtask"><i class="fa fa-list"></i> Lista de Ocorrências</a></li>
                                 <li><a href="#mytask" id="mytask"><i class="fa fa-tasks"></i> Minhas Ocorrências</a></li>
                             </ul>
-                        </li>
+                        </li-->
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-file-text"></i>
@@ -154,15 +154,31 @@
                                         <i class="fa fa-file"></i>
                                          Relatório de Atendimentos
                                     </a>
-                                    <a href="#">
-                                        <i class="fa fa-file-o"></i>
-                                         Relatório de Ocorrências
-                                    </a>
-                                    <a href="#">
-                                        <i class="fa fa-file-text-o"></i>
-                                         Relatório de Respostas
-                                    </a>
                                 </li>
+                            
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-file-text"></i>
+                                            <span>Controler de Backup</span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>    
+                                
+                                    <ul class="treeview">
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-file-text"></i>
+                                                Com Backup
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-file-text"></i>
+                                                Sem Backup
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>    
+                                
                             </ul>
                         </li>
                     </ul>

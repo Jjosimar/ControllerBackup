@@ -7,8 +7,8 @@ class cadastroCliente {
 	}
 	
 	//busca todos os contatos com os seus dados
-	public function buscarContatoDados($id_contato) {
-		return $this->buscarDadosporContato($id_contato);
+	public function buscarContatoDados($id_usuario) {
+		return $this->buscarDadosporContato($id_usuario);
 	}
 	
 	//nao esquecer de colocar o id corretamente em geral*********************
@@ -54,23 +54,71 @@ class cadastroCliente {
 			echo "email ja cadastrado";
 		}
 	}
-	//nao esquecer de colocar o id corretamente
-	public function editar($id, $nomeEmpresa, $nomeProprietario, $email, $cpf_cnpj, $telefone, $celular, $skype, $municipio, $estado, $cep, $complemento, $bairro, $id_contato_dados, $id_endereco){
+
+	
+	private function buscarDados(){
+		require_once 'Connection/conexao.class.php';
+		$conec = new conexao ();
+		$pdo = new PDO ( "mysql:host=$conec->host;dbname=$conec->dbname", "$conec->usuario", "$conec->senha" );
+		
+		$contato = null; 
+		try {
+			$stmte = $pdo->prepare ( "SELECT * FROM cliente c inner join usuario u on c.id_usuario = u.id_usuario ORDER BY c.nomeEmpresa");
+			$executa = $stmte->execute (); 
+				
+			if ($executa) {
+				while ( $reg = $stmte->fetch ( PDO::FETCH_OBJ ) ) {
+					$contato[$reg->id] = $reg;
+				}
+			}
+		} catch ( PDOException $e )  {
+			echo $e->getMessage ();
+				
+		}
+		return $contato;
+	}
+	
+	private function buscarDadosporContato($id_usuario){
 		require_once '../Conection/conexao.class.php';
+		$conec = new conexao ();
+		$pdo = new PDO ( "mysql:host=$conec->host;dbname=$conec->dbname", "$conec->usuario", "$conec->senha" );
+	
+		$contato = null;
+		try {
+			$stmte = $pdo->prepare ( "SELECT * FROM cliente c inner join usuario u on c.id_usuario = u.id_usuario where c.id_usuario =?");
+			$stmte->bindParam(1, $id_usuario , PDO::PARAM_STR);
+			$executa = $stmte->execute ();
+	
+			if ($executa) {
+				while ( $reg = $stmte->fetch ( PDO::FETCH_OBJ ) ) {
+					$contato[$reg->id_usuario] = $reg;
+				}
+			}
+		} catch ( PDOException $e )  {
+			echo $e->getMessage ();
+	
+		}
+		return $contato;
+	}
+	//nao esquecer de colocar o id corretamente
+	public function editar($codigoLiberacao, $cpf_cnpj, $situacao, $nomeEmpresa, $acao, $qntCliente, $dateBackup, $id){
+		require_once '../Connection/conexao.class.php';
 		$conec = new conexao ();
 			
 		$pdo = new PDO ( "mysql:host=$conec->host;dbname=$conec->dbname", "$conec->usuario", "$conec->senha" );
 		
-	    //$existe = $this -> verificarNomeEmpresaporId($pdo, $nomeEmpresa, $id);
+	    $existe = $this -> verificarNomeEmpresaporId($pdo, $nomeEmpresa, $id);
 		if($existe == 2){
-		
-			
 			try{
-				$stmte = $pdo->prepare("UPDATE contato SET nomeEmpresa=?, nomeProprietario=?, email=?, cpf_cnpj=? WHERE id_contato=?;");
-				$stmte->bindParam(1, $nomeEmpresa , PDO::PARAM_STR);
-				$stmte->bindParam(2, $nomeProprietario , PDO::PARAM_STR);
-				$stmte->bindParam(3, $email , PDO::PARAM_STR);
-				$stmte->bindParam(4, $cpf_cnpj , PDO::PARAM_STR);
+				$stmte = $pdo->prepare("UPDATE cliente SET codigoLiberacao=?, cpf_cnpj=?, situacao=?, nomeEmpresa=?, acao=?, qntCliente=?, dateBackup=? WHERE id=?;");
+				$stmte->bindParam(1, $codigoLiberacao , PDO::PARAM_STR);
+				$stmte->bindParam(2, $cpf_cnpj , PDO::PARAM_STR);
+				$stmte->bindParam(3, $situacao , PDO::PARAM_STR);
+				$stmte->bindParam(4, $nomeEmpresa , PDO::PARAM_STR);
+				$stmte->bindParam(5, $acao , PDO::PARAM_STR);
+				$stmte->bindParam(6, $qntCliente , PDO::PARAM_STR);
+				$stmte->bindParam(7, $dateBackup , PDO::PARAM_STR);
+				$stmte->bindParam(8, $id , PDO::PARAM_STR);
 				$executa = $stmte->execute();
 			
 				if($executa){
@@ -91,6 +139,24 @@ class cadastroCliente {
 			
 	}
 	
+	private function verificarNomeEmpresaporId($pdo, $nomeEmpresa, $id) {
+		try {
+			$stmte = $pdo->prepare ( "SELECT * FROM cliente where nomeEmpresa = ? and id <> ?" );
+			$stmte->bindParam ( 1, $nomeEmpresa, PDO::PARAM_STR );
+			$stmte->bindParam ( 2, $id, PDO::PARAM_STR );
+			$executa = $stmte->execute ();
+			
+			if ($executa) {
+				while ( $reg = $stmte->fetch ( PDO::FETCH_OBJ ) ) { /* Para recuperar um ARRAY utilize PDO::FETCH_ASSOC */
+					return $existe = 1;
+				}
+			}
+		} catch ( PDOException $e ) {
+			echo $e->getMessage ();
+		}
+		return 2;
+	}
+
 	public function ApagarDados($id){
 		require_once '../Connection/conexao.class.php';
 		$conec = new conexao ();
@@ -103,7 +169,7 @@ class cadastroCliente {
 		
 				
 			try{
-				$stmte = $pdo->prepare("DELETE FROM contato WHERE id_contato=?;");
+				$stmte = $pdo->prepare("DELETE FROM cliente WHERE id=?;");
 				$stmte->bindParam(1,$id);
 				$executa = $stmte->execute();
 					
@@ -140,24 +206,6 @@ class cadastroCliente {
 			echo $e->getMessage ();
 		}
 	}*/
-	
-	private function verificarNomeEmpresaporId($pdo, $nomeEmpresa, $id) {
-		try {
-			$stmte = $pdo->prepare ( "SELECT * FROM contato where nomeEmpresa = ? and id_contato <> ?" );
-			$stmte->bindParam ( 1, $nomeEmpresa, PDO::PARAM_STR );
-			$stmte->bindParam ( 2, $id, PDO::PARAM_STR );
-			$executa = $stmte->execute ();
-			
-			if ($executa) {
-				while ( $reg = $stmte->fetch ( PDO::FETCH_OBJ ) ) { /* Para recuperar um ARRAY utilize PDO::FETCH_ASSOC */
-					return $existe = 1;
-				}
-			}
-		} catch ( PDOException $e ) {
-			echo $e->getMessage ();
-		}
-		return 2;
-	}
 	
 	/*private function cadastrarDados($pdo, $id_contato, $telefone, $celular, $skype){
 		try {
@@ -251,51 +299,7 @@ class cadastroCliente {
 		
 	}*/
 	
-	private function buscarDados(){
-		require_once 'Connection/conexao.class.php';
-		$conec = new conexao ();
-		$pdo = new PDO ( "mysql:host=$conec->host;dbname=$conec->dbname", "$conec->usuario", "$conec->senha" );
-		
-		$contato = null; 
-		try {
-			$stmte = $pdo->prepare ( "SELECT * FROM cliente order by nomeEmpresa;");
-			$executa = $stmte->execute (); 
-				
-			if ($executa) {
-				while ( $reg = $stmte->fetch ( PDO::FETCH_OBJ ) ) {
-					$contato[$reg->id] = $reg;
-				}
-			}
-		} catch ( PDOException $e )  {
-			echo $e->getMessage ();
-				
-		}
-		return $contato;
-	}
-	
-	/*private function buscarDadosporContato($id_contato){
-		require_once '../Conection/conexao.class.php';
-		$conec = new conexao ();
-		$pdo = new PDO ( "mysql:host=$conec->host;dbname=$conec->dbname", "$conec->usuario", "$conec->senha" );
-	
-		$contato = null;
-		try {
-			$stmte = $pdo->prepare ( "SELECT * FROM contato left join contato_dados on id_contato = contato_id_contato where id_contato =? group by id_contato order by telefone LIMIT 1;");
-			$stmte->bindParam(1, $id_contato , PDO::PARAM_STR);
-			$executa = $stmte->execute ();
-	
-			if ($executa) {
-				while ( $reg = $stmte->fetch ( PDO::FETCH_OBJ ) ) {
-					$contato[$reg->id_contato] = $reg;
-				}
-			}
-		} catch ( PDOException $e )  {
-			echo $e->getMessage ();
-	
-		}
-		return $contato;
-	}
-	
+	/*
 	private function ApagarDadosCliente($pdo, $id){
 		try{
 			$stmte = $pdo->prepare("DELETE FROM contato_dados WHERE id_contato_dados =?;");

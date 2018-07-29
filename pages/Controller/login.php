@@ -10,13 +10,13 @@ if (! empty ( $_POST ['tipo'] ) && $_POST ['tipo'] == 1) {
 	            
         $usuario = $_POST ['usuario'];
         $senha = $_POST ['senha'];
-        $funcName = $_POST ['funcName'];
+        //$id_usuario = $_POST ['id_usuario'];
         
         
         require_once '../Model/loginConection.class.php';
         
         $cadastrar = new loginConection();
-        $cadastrar->buscarDados($usuario, $senha, $funcName);
+        $cadastrar->logar($usuario, $senha);
        print_r ( $_REQUEST );
         //header ( "Location: ../../home.php" );
         //echo "logado";

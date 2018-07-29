@@ -1,0 +1,19 @@
+
+<option value="<?php $value->acao == "Faz" ? "selected" : "" ?>">Faz</option>         
+<option value="<?php $value->acao == "Não Faz" ? "selected" : "" ?>">Não Faz</option>
+
+
+
+<option <?php if($value->acao == "Não Faz"){?> selected value="Não Faz">Não Faz</option> <?php }else echo "";?>       
+
+
+
+
+<option value = "<?php  $value->acao == 'Faz' ? 'selected' : '' ?>">Faz</option>         
+<option value = "<?php $value->acao == 'Não Faz' ? 'selected' : '' ?>">Não Faz</option>        
+<option value = "<?php $value->acao == 'Não Faz' ? 'selected' : '' ?>"><?php echo $value->acao == "Não Faz" ? "selected" : "" ;?></option>        
+
+
+
+<option <?php if ($value->situacao == "S")  echo "selected"; else echo "";?> value="Criado">Criado</option>         
+<option <?php ($value->situacao == "N") ? "selected" : ""?> value="Não Criado">Não Criado</option>   

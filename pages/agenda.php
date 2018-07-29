@@ -31,6 +31,14 @@
                 </div>                
             </div>
             <div class="box-body" style="height: auto">
+                <table class="table table-hover">
+                        <thead class="bg-blue">
+                            <tr>
+                                <th "col-md-2 col-xs-8">Nome da Empresa</th>
+                                <th "col-md-2 col-xs-8">Ultima data de backup</th>
+                            </tr>
+                        </thead>  
+                </table>  
                 <?php
                     
                         require_once 'Model/cadastroCliente.class.php';
@@ -43,43 +51,74 @@
                                 $link = "editar.php?id=" . $value->id;
                     
                             
-                ?>            
-                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                ?>    
+                </br>        
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">    
                     <div class="panel panel-default">
-                        <div class="panel-heading botao" style = "cursor: pointer;" name=0 data-toggle="collapse" href="#collapse<?php echo $value->id;?>">
+                        <div class="panel-heading botao bg-green" style = "cursor: pointer;" name=0 data-toggle="collapse" href="#collapse<?php echo $value->id;?>">
                                 <table>
                                     <thead class="panel-title">
                                         <tr>
-                                            <th><?php echo $value->nomeEmpresa;?></th>
-                                            <th class="col-md-5 col-xs-8"><?php echo $value->dateBackup;?></th>
+                                            <th class="col-md-4 col-xs-8"><?php echo $value->nomeEmpresa;?></th>
+                                            <th class="col-md-2 col-xs-8"><?php echo $value->dateBackup;?></th>
                                         </tr>                                    
                                     </thead>
                                 </table>                            
                         </div>
                         <div id="collapse<?php echo $value->id;?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                             <div class="panel-body">
-                                <table class="table table-striped table-hover">
-                                    <tbody>
-                                        <tr>
-                                            <td><?php echo $value->dateBackup;?></td>
-                                            <td><?php echo $value->dateBackup;?></td>
-                                            <td><?php echo $value->dateBackup;?></td>
-                                            <td><?php echo $value->dateBackup;?></td>
-                                            <td>
-                                                <button class="btn btn-success">
-                                                    Encerrar
-                                                </button> 
-                                                <button class="btn btn-warning">
-                                                    Editar
-                                                </button> 
-                                                <button class="btn btn-primary">
-                                                    Encaminhar
-                                                </button> 
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                          
+                                    <div class="tab-content">
+                                        
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Código:</label>
+                                                <input class="form-control"  type="text" name="codigoLiberacao">
+                                            </div>
+
+                                        
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Situação:</label>
+                                                <select class="form-control" name="situacao">
+                                                    <option value="">Selecione...</option>
+                                                    <option>Criado</option>         
+                                                    <option>Não Criado</option>         
+                                                </select>
+                                            </div> 
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Nome da Empresa:</label>
+                                                <input class="form-control" type="text" name="nomeEmpresa">
+                                            </div>
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Ação:</label>
+                                                <select class="form-control" name="acao">
+                                                    <option value="">Selecione...</option>
+                                                    <option>Faz</option>         
+                                                    <option>Não Faz</option>         
+                                                </select>
+                                            </div>                                    
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Quantidade dos clientes:</label>
+                                                <input class="form-control" type="text" name="qntCliente">
+                                            </div>
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Data do Ultimo Backup:</label>
+                                                <input class="form-control" type="text" name="dateBackup">
+                                            </div>                       
+                                        
+                                        <div class="modal-footer">
+                                            <div class="col-md-12 col-xs-12">
+                                                <button type="submit" class="btn btn-success">Cadastrar</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                            </div>
+                                        </div>
+                                     
+                        
                             </div>
+                            </br>
                         </div>
                     </div>
                 </div>
@@ -87,8 +126,7 @@
 		                }
 	                }
 	
-	            ?>          
-
+	            ?>                
             </div>
             <br/>
             <br/>

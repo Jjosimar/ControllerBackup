@@ -15,12 +15,15 @@
         <link href="css/kc.fab.css" rel="stylesheet" type="text/css"/>
         <!--Material Icons-->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+
     </head>
     <?php 
-                require_once 'Model/cadastroUsuario.class.php';
-                session_start();
-                $logado = $_SESSION['usuario'];
-    ?>
+        session_start();
+        $logado = $_SESSION['usuario'];
+        
+    ?>  
     <body>
         <div class="box box-primary">
             <div class="box-header" style="color: #0075b0">
@@ -36,50 +39,137 @@
                 </div>                
             </div>
             <div class="box-body" style="height: auto">
-            <table class="table table-hover">
-                    <thead class="bg-blue">
-                        <tr>
-                            <th>Nome da Empresa</th>
-                            <th>Ultima data de backup</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <?php
-                        
-                            require_once 'Model/cadastroCliente.class.php';
-                            
-                            $buscar = new cadastroCliente();
-                            $contato = $buscar->buscar();
-
-                            if (! empty ( $contato )) {
-                                foreach ( $contato as $value ) {
-                                    $link = "editar.php?id=" . $value->id;
-                        
-                                
-                    ?>
-                    <tbody class = "table-striped">
-                        <tr>
-                            <td><?php echo $value->nomeEmpresa;?></td>
-                            <td><?php echo $value->dateBackup;?></td>
-                            <td>
-                                <a href="#" data-toggle="modal" data-target="#edit" style="font-size: 18px; color: #0075b0; text-align: center">
-                                    <i class="material-icons">edit</i>
-                                </a>
-                                &nbsp;&nbsp;
-                                <a href="#" data-toggle="modal" data-target="#delete-modal" style="font-size: 18px; color: #D50000; text-align: center">
-                                    <i class="material-icons">delete</i>
-                                </a>
-                            </td>
-                        </tr>                        
-                    </tbody>
-                
-                <?php
-		                }
-	                }
-	
-	            ?>
+              
+                <table class="table table-hover">
+                        <thead class="bg-blue">
+                            <tr>
+                                <th "col-md-2 col-xs-8">Nome da Empresa</th>
+                                <th "col-md-2 col-xs-8">Ultima data de backup</th>
+                            </tr>
+                        </thead>  
                 </table>
-            </div>
+                </br>
+                <?php
+                    
+                        require_once 'Model/cadastroCliente.class.php';
+                        
+                        $buscar = new cadastroCliente();
+                        $contato = $buscar->buscar();
+
+                        if (! empty ( $contato )) {
+                            foreach ( $contato as $value ) {
+                                if($value->funcUsername == $logado){
+                                    //$link = "editar.php?id=" . $value->id;
+                    
+                            
+                ?>
+                
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">    
+                    <div class="panel panel-default">
+                        <div class="panel-heading botao bg-green" style = "cursor: pointer; height: 42px; padding-top: 5px;" name=0 data-toggle="collapse" href="#collapse<?php echo $value->id;?>">
+                                <table>
+                                    <thead class="panel-title">
+                                        <tr>
+                                            <th class="col-md-6 col-xs-8"><?php echo $value->nomeEmpresa;?></th>
+                                            <th class="col-md-12 col-xs-8"><?php echo $value->dateBackup;?></th>
+                                            <th> 
+                                                <!--button type="button" data-toggle="modal" data-target="#teste" class="btn btn-danger " data-dismiss="modal" style="width: 100px; height: 30px; margin-top: 0px; position: center;">Excluir</button-->
+                                                <a href="#" class="apagar" apagar="<?php echo $value->id;?>" style="font-size: 18px; color: #D50000; text-align: center">
+                                                    <i class="material-icons">delete</i>
+                                                </a>
+                                            </th>
+                                        </tr>                                    
+                                    </thead>
+                                </table>                            
+                        </div>
+                        <div id="collapse<?php echo $value->id;?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+
+                                <form id="accountForm" class="form" method="POST" action="pages/Controller/cadastrarCliente.php" enctype="multipart/form-datad">
+                                    <input style="display: none;" type="text" value="3" name="tipo" />   
+                                    <input style="display: none;" name="id" type="text" value="<?php echo $value->id;?>"                       
+                                    <div class="tab-content">
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Código:</label>
+                                                <input class="form-control" type="text" value="<?php echo $value->codigoLiberacao;?>"name="codigoLiberacao">
+                                            </div>
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label for="selection">CPF/CNPJ:</label>
+                                                <input class="form-control" value="<?php echo $value->cpf_cnpj;?>" type="text" name="cpf_cnpj">
+                                            </div>
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Nome da Empresa:</label>
+                                                <input class="form-control" type="text" value="<?php echo $value->nomeEmpresa;?>" name="nomeEmpresa">
+                                            </div>
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Quantidade dos clientes:</label>
+                                                <input class="form-control" type="text" value="<?php echo $value->qntCliente;?>" name="qntCliente">
+                                            </div>
+                                        
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Situação:</label>
+                                                <select class="form-control" name="situacao">
+                                                <?php 
+                                                    if ($value->situacao == "S")
+                                                    {
+                                                    echo "<option value=\"S\" selected>Criado</option>
+                                                    <option value=\"N\">Não Criado</option>";
+                                                    }
+                                                    else
+                                                    {
+                                                    echo "<option value=\"S\">Criado</option>
+                                                    <option value=\"N\" selected>Não Criado</option>";
+                                                    }
+                                                ?>      
+                                                </select>
+                                            </div> 
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Ação:</label>
+                                                <select class="form-control" name="acao">
+                                                <?php 
+                                                    if ($value->acao == "Faz")
+                                                    {
+                                                    echo "<option value=\"Faz\" selected>Faz</option>
+                                                    <option value=\"Não Faz\">Não Faz</option>";
+                                                    }
+                                                    else
+                                                    {
+                                                    echo "<option value=\"Faz\">Faz</option>
+                                                    <option value=\"Não Faz\" selected>Não Faz</option>";
+                                                    }
+                                                ?>
+
+                                                </select>
+                                            </div>                                    
+
+                                            <div class="form-group col-md-4 col-xs-4">
+                                                <label class="control-label">Data do Ultimo Backup:</label>
+                                                <input class="form-control" type="text" value="<?php echo $value->dateBackup;?>" name="dateBackup">
+                                            </div>                       
+                                        
+                                        <div class="modal-footer">
+                                            <div class="col-md-12 col-xs-12">
+                                                <button type="submit" class="btn btn-success">Editar</button>
+                                                <!--button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button-->
+                                            </div>
+                                        
+                                    </div>
+                                </form>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+		                        }
+                            }
+                        }
+	
+	            ?>                        
+            </div> 
             <br/>
             <br/>
             <br/>
@@ -90,7 +180,7 @@
             </button> 
             <!--Modal Cadastro-->
             <?php 
-               // if
+            // if
             ?>
             <div class="modal fade" id="teste" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
                 <div class="modal-dialog" role="document">
@@ -113,12 +203,12 @@
             </div> 
             <?php
                             
-                
+                require_once 'Model/cadastroUsuario.class.php';
                 $buscar = new cadastroUsuario();
                 $contato = $buscar->buscar();
-                              
+                            
                                         
-             ?>           
+            ?>           
             <div class="modal fade cart-modal" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabell" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -168,8 +258,8 @@
                                             <label class="control-label">Situação:</label>
                                             <select class="form-control" name="situacao">
                                                 <option value="">Selecione...</option>
-                                                <option>Criado</option>         
-                                                <option>Não Criado</option>         
+                                                <option Value="S">Criado</option>         
+                                                <option value="N">Não Criado</option>         
                                             </select>
                                         </div> 
 
@@ -206,9 +296,8 @@
                         </div>
                     </div>
                 </div>
-               
+            
             </div>
-           
         </div>
                 
         <!--Modal Exclusão-->
@@ -225,104 +314,41 @@
                         Deseja realmente excluir este Contato?
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Sim</button>
+                        <button type="submit" class="btn btn-primary apagar" apagar="<?php echo $value->id;?>">Sim
+                            
+                        </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
                     </div>
                 </div>
             </div>
         </div>         
-        
-         <!--Modal edit-->
-        <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </button>
-                        <h4 class="modal-title" id="modalLabel">Excluir</h4>
-                    </div>
-                    <div class="modal-body">
-                        Deseja realmente editar este Contato?
-                    </div>
-                    <div class="modal-footer">
-                        <button data-toggle="modal" data-target="#edit-modal" type="submit" class="btn btn-primary">Sim</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-         <div class="modal fade cart-modal" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
-                            <span aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span>
-                        </button>
-                        <h3 class="modal-title">Cadastro de Contato</h3>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#info-tab" data-toggle="tab"><i class="fa fa-info"></i> Dados Principais</a></li>
-                        </ul>
-                        <br/>
-                        <form id="accountForm" class="form" method="POST" action="pages/Controller/cadastrarCliente.php" enctype="multipart/form-datad">
-                            <input style="display: none;" type="text" value="2" name="tipo" />
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="info-tab">
+               
+        <script type="text/javascript">
+              $(".apagar").click(function(){
+                var apagar =  $(this).attr("apagar");
+            
+                var txt;
+                var tipo = 4;
+                var r = confirm("Apagar!");
+                if (r == true) {
+                
 
-                                    <div class="form-group col-md-4 col-xs-4">
-                                        <label class="control-label">Código:</label>
-                                        <input class="form-control"  type="text" name="codigoLiberacao">
-                                    </div>
 
-                                   
-                                    <div class="form-group col-md-4 col-xs-4">
-                                        <label class="control-label">Situação:</label>
-                                        <select class="form-control" name="situacao">
-                                            <option value="">Selecione...</option>
-                                            <option>Criado</option>         
-                                            <option>Não Criado</option>         
-                                        </select>
-                                    </div> 
+                $.post("pages/Controller/cadastrarCliente.php",
+                        {
+                apagar: apagar, 
+                tipo:	tipo
+                        
+                        },
+                        function(data, status){
+                            alert(data);
+                            location.reload();
+                        });
 
-                                    <div class="form-group col-md-4 col-xs-4">
-                                        <label class="control-label">Nome da Empresa:</label>
-                                        <input class="form-control" type="text" name="nomeEmpresa">
-                                    </div>
-                                    <div class="form-group col-md-4 col-xs-4">
-                                        <label class="control-label">Ação:</label>
-                                        <select class="form-control" name="acao">
-                                            <option value="">Selecione...</option>
-                                            <option>Faz</option>         
-                                            <option>Não Faz</option>         
-                                        </select>
-                                    </div>                                    
-
-                                    <div class="form-group col-md-4 col-xs-4">
-                                        <label class="control-label">Quantidade dos clientes:</label>
-                                        <input class="form-control" type="text" name="qntCliente">
-                                    </div>
-
-                                     <div class="form-group col-md-4 col-xs-4">
-                                        <label class="control-label">Data do Ultimo Backup:</label>
-                                        <input class="form-control" type="text" name="dateBackup">
-                                    </div>                       
-                                </div>
-                            <div class="modal-footer">
-                                <div class="col-md-12 col-xs-12">
-                                    <button type="submit" class="btn btn-success">Cadastrar</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-
+                } 
+                
+            });
+        </script>                                           
         <!-- jQuery 2.1.3 -->
         <script src="plugins/jQuery/jQuery-2.1.3.min.js"></script>
         <!-- jQuery UI 1.11.2 -->
@@ -361,8 +387,33 @@
                 $('.kc_fab_wrapper').kc_fab(links);
             });
         </script>
+        <script type="text/javascript">
+              $(".apagar").click(function(){
+                var apagar =  $(this).attr("apagar");
+            
+                var txt;
+                var tipo = 4;
+                var r = confirm("Apagar!");
+                if (r == true) {
+                
+
+
+                $.post("cadastrarCliente.php",
+                        {
+                apagar: apagar, 
+                tipo:	tipo
+                        
+                        },
+                        function(data, status){
+                            alert(data);
+                            location.reload();
+                        });
+
+                } 
+                
+            });
+        </script>
         	
               
     </body>
 </html>
-

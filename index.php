@@ -25,8 +25,7 @@
 
     </head>
     <body>
-        <?php define('ROOT_PATH', dirname(__FILE__));?>
-        
+              
         <div class="container-fluid col-sm-12 col-lg-3 col-md-6" style="margin-top: 50px">
             <div class="card bg-white" style=" border: none">
                 <div class="card-header" style="text-align: center; color: #fff;">
@@ -40,7 +39,6 @@
                         </div>
                         <div class="form-group col-12">
                             <input type="password" class="form-control" placeholder="Senha" name="senha">
-                            <input type="text" class="form-control" placeholder="funcName" name="funcName">
                         </div>
                         <div class="form-group col-12">
                             <button class="btn btn-outline-success col-12" type="submit">Entrar</button>

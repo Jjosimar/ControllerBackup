@@ -1,0 +1,9 @@
+  <?php    
+                    require_once 'Model/loginConection.class.php';
+                    $dados = new loginConection();
+                    $logar = $dados->buscarContatoDados();
+                    
+                    foreach($logar as $link){
+                        if($link->funcName == $logado){
+
+                ?>
